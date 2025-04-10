@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio|mbertolotti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="popup-form" class="popup">
+        <div class="popup-content">
+          <h2>Bem-vinda(o) ao meu portfólio!</h2>
+          <p>Preencha as informações para acessar:</p>
+          <form id="dadosForm">
+            <input type="text" id="nome" placeholder="Seu Nome" required>
+            <input type="text" id="cidade" placeholder="Cidade" required>
+            <input type="text" id="estado" placeholder="Estado" required>
+            <button type="submit">Acessar Portfólio</button>
+          </form>
+        </div>
+      </div>   
+      
+    <div class="container">
+        <div class="card perfil">
+            <img class="capa" src="assets/img_Fundo.PNG" alt="Imagem de Capa">
+            
+            <div class="perfil-topo">
+                <img class="foto-perfil" src="assets/img_perfil.png" alt="Foto de Perfil">
+                <div class="perfil-info">
+                    <h1 class="nome">MAYARA M. BERTOLOTTI</h1>
+                    <h2 class="cargo">Analista de Dados</h2>
+                    <p class="localizacao">Extrema, Minas Gerais, Brasil</p>
+                    <a href="https://www.linkedin.com/in/mayarabertolotti/" target="_blank" title="Clique aqui para acessar meu perfil no Linkedin 😀">
+                        <img src="assets/img_Linkedin.png" class="icone-linkedin" alt="LinkedIn">
+                    </a>
+                </div>
+            </div>
+
+            <hr class="linha">
+
+            <div class="sobre">
+                <h3>Sobre</h3>
+                <p>
+                    Tenho 32 anos e construí minha trajetória profissional onde dados, processos e pessoas se conectam. Já atuei em diferentes áreas, o que me deu um olhar atento às rotinas e uma escuta ativa para entender as reais necessidades.
+                </p>
+                <p>
+                    Gosto de organizar informações, tornar contextos complexos mais claros e apoiar quem precisa tomar decisões com base em dados. Ao longo do tempo, me aproximei da área de dados e fui expandindo meus conhecimentos técnicos.
+                </p>
+                <p>
+                    Domino ferramentas como Excel, VBA, Power BI, linguagem M (Power Query), SQL e Python. Também tenho familiaridade com APIs, automações e design com Figma, HTML e CSS — o que contribui para entregar soluções visuais e intuitivas.
+                </p>
+                <p>
+                    Fora do trabalho, sou movida por arte, música e natureza — elementos que me ajudam a manter o olhar sensível e criativo em tudo o que faço.
+                </p>
+            </div>            
+          
+            <div class="experiencia">
+                <h3>Experiência</h3>
+                <div class="item-exp">
+                    <h4>ID LOGISTICS</h4>
+                    <p class="periodo">Jan 2024 - Atual</p>
+                    <p class="cargo-exp">Analista de Dados</p>
+                </div>
+                <div class="item-exp">
+                    <h4>JSL S.A</h4>
+                    <p class="periodo">Abr 2022 - Dez 2023</p>
+                    <p class="cargo-exp">Analista de Logística - Soluções</p>
+                </div>
+            </div>
+
+            <div class="educacao">
+                <h3>Formação Acadêmica</h3>
+                <div class="item-edu">
+                    <h4>Anhembi Morumbi</h4>
+                    <p class="situacao">Status - Cursando</p>
+                    <p class="periodo"> Abr/2022 - Dez/2025</p>
+                    <p class="curso">Análise e Desenvolvimento de Sistemas</p>
+                </div>
+            </div>
+
+            <div class="portfolio-card">
+                <h3>Meu Portfólio Profissional em Power BI</h3>
+                <p>Visualize meu projeto em Power BI, com uma visão completa da minha trajetória profissional, competências e experiências.</p>
+                <a class="btn-portfolio" href="https://app.powerbi.com/view?r=eyJrIjoiZWM0MTc0MGYtZTY5YS00MjNjLTgzY2UtYTFmZTU4NGM4YTBlIiwidCI6ImViZTk5ZjFiLTAwZjgtNDI5Ny05YzZjLTY3OThhYzY0ZWM2MSJ9" target="_blank">
+                    ACESSAR PROJETO
+                </a>                
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("dadosForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+      
+          const nome = document.getElementById("nome").value.trim();
+          const cidade = document.getElementById("cidade").value.trim();
+          const estado = document.getElementById("estado").value.trim();
+      
+          if (nome && cidade && estado) {
+            const formData = new FormData();
+            formData.append("nome", nome);
+            formData.append("cidade", cidade);
+            formData.append("estado", estado);
+      
+            fetch("https://script.google.com/macros/s/AKfycbz2JAZ3W5EDwrI36AH__h5ie09PAcu8reMtfU54fXXlGlI55-A8x67BNFRkv4pcbKu1/exec", {
+              method: "POST",
+              body: formData
+            })
+              .then(response => response.text())
+              .then(data => {
+                console.log("Retorno:", data);
+                document.getElementById("popup-form").style.display = "none";
+              })
+              .catch(error => {
+                console.error("Erro ao enviar:", error);
+                alert("Erro ao enviar. Tente novamente.");
+              });
+          } else {
+            alert("Por favor, preencha todos os campos.");
+          }
+        });
+    </script>        
+
+</body>
+</html>
