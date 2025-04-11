@@ -13,18 +13,35 @@
         <div class="popup-content">
           <h2>Bem-vinda(o) ao meu portfólio!</h2>
           <p>Preencha as informações para acessar:</p>
+          <p>Esses dados são usados para acompanhar os acessos ao portfólio e serão visualizados em um dashboard de análise.</p>
           <form id="dadosForm">
             <input type="text" id="nome" placeholder="Seu Nome" required>
-            <input type="text" id="cidade" placeholder="Cidade" required>
-            <input type="text" id="estado" placeholder="Estado" required>
+          
+            <select id="estado" required>
+              <option value="">Selecione seu estado</option>
+            </select>
+          
+            <select id="cidade" required>
+              <option value="">Selecione sua cidade</option>
+            </select>
+          
+            <select id="origem" required>
+              <option value="">Como conheceu o site?</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Amigo(a)">Amigo(a)</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Outro">Outro</option>
+            </select>
+          
             <button type="submit">Acessar Portfólio</button>
           </form>
+          
         </div>
       </div>   
       
     <div class="container">
         <div class="card perfil">
-            <img class="capa" src="assets/img_Fundo.png" alt="Imagem de Capa">
+            <img class="capa" src="assets/img_Fundo.png " alt="Imagem de Capa">
             
             <div class="perfil-topo">
                 <img class="foto-perfil" src="assets/img_perfil.png" alt="Foto de Perfil">
@@ -92,18 +109,55 @@
     </div>
 
     <script>
+        // Carregar estados ao iniciar
+        fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
+          .then(res => res.json())
+          .then(estados => {
+            const estadoSelect = document.getElementById("estado");
+            estados.forEach(estado => {
+              const option = document.createElement("option");
+              option.value = estado.sigla;
+              option.textContent = estado.nome;
+              estadoSelect.appendChild(option);
+            });
+          });
+      
+        // Carregar cidades ao selecionar estado
+        document.getElementById("estado").addEventListener("change", function () {
+          const uf = this.value;
+          const cidadeSelect = document.getElementById("cidade");
+          cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
+      
+          fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
+            .then(res => res.json())
+            .then(cidades => {
+              cidadeSelect.innerHTML = '<option value="">Selecione sua cidade</option>';
+              cidades.forEach(cidade => {
+                const option = document.createElement("option");
+                option.value = cidade.nome;
+                option.textContent = cidade.nome;
+                cidadeSelect.appendChild(option);
+              });
+            });
+        });
+      
+        // Envio do formulário para o Google Sheets
         document.getElementById("dadosForm").addEventListener("submit", function (e) {
           e.preventDefault();
       
           const nome = document.getElementById("nome").value.trim();
-          const cidade = document.getElementById("cidade").value.trim();
-          const estado = document.getElementById("estado").value.trim();
+          const estado = document.getElementById("estado").value;
+          const cidade = document.getElementById("cidade").value;
+          const origem = document.getElementById("origem").value;
+          const data = new Date().toLocaleString("pt-BR");
       
-          if (nome && cidade && estado) {
+          if (nome && estado && cidade && origem) {
             const formData = new FormData();
             formData.append("nome", nome);
-            formData.append("cidade", cidade);
             formData.append("estado", estado);
+            formData.append("cidade", cidade);
+            formData.append("origem", origem);
+            formData.append("data", data);
       
             fetch("https://script.google.com/macros/s/AKfycbz2JAZ3W5EDwrI36AH__h5ie09PAcu8reMtfU54fXXlGlI55-A8x67BNFRkv4pcbKu1/exec", {
               method: "POST",
@@ -122,7 +176,7 @@
             alert("Por favor, preencha todos os campos.");
           }
         });
-    </script>        
+      </script>             
 
 </body>
 </html>
