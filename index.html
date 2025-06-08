@@ -142,15 +142,28 @@
         });
       
         // Envio do formulário para o Google Sheets
+        // Envio do formulário para o Google Sheets
+        // Envio do formulário para o Google Sheets
+          // ===============================
+          // [CORREÇÃO DE ENVIO DUPLICADO]
+          // Este bloco foi ajustado para evitar múltiplos envios
+          // - Desabilita o botão após o primeiro clique
+          // - Fornece feedback com "Enviando..."
+          // - Reabilita o botão em caso de erro ou campos faltando
+          // ===============================
         document.getElementById("dadosForm").addEventListener("submit", function (e) {
           e.preventDefault();
-      
+
+          const botao = this.querySelector('button[type="submit"]');
+          botao.disabled = true;
+          botao.textContent = "Enviando...";
+
           const nome = document.getElementById("nome").value.trim();
           const estado = document.getElementById("estado").value;
           const cidade = document.getElementById("cidade").value;
           const origem = document.getElementById("origem").value;
           const data = new Date().toLocaleString("pt-BR");
-      
+
           if (nome && estado && cidade && origem) {
             const formData = new FormData();
             formData.append("nome", nome);
@@ -158,24 +171,29 @@
             formData.append("cidade", cidade);
             formData.append("origem", origem);
             formData.append("data", data);
-      
+
             fetch("https://script.google.com/macros/s/AKfycbz2JAZ3W5EDwrI36AH__h5ie09PAcu8reMtfU54fXXlGlI55-A8x67BNFRkv4pcbKu1/exec", {
               method: "POST",
               body: formData
             })
-              .then(response => response.text())
-              .then(data => {
-                console.log("Retorno:", data);
-                document.getElementById("popup-form").style.display = "none";
-              })
-              .catch(error => {
-                console.error("Erro ao enviar:", error);
-                alert("Erro ao enviar. Tente novamente.");
-              });
+            .then(response => response.text())
+            .then(data => {
+              console.log("Retorno:", data);
+              document.getElementById("popup-form").style.display = "none";
+            })
+            .catch(error => {
+              console.error("Erro ao enviar:", error);
+              alert("Erro ao enviar. Tente novamente.");
+              botao.disabled = false;
+              botao.textContent = "Acessar Portfólio";
+            });
+
           } else {
             alert("Por favor, preencha todos os campos.");
+            botao.disabled = false;
+            botao.textContent = "Acessar Portfólio";
           }
-        });
+        }); 
       </script>             
 
 </body>
